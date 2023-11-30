@@ -1,3 +1,11 @@
+const outcomeDiv = document.querySelector("#outcomeDiv");
+const scoreDiv = document.querySelector('#scoreDiv');
+
+const game = {
+    player: 0,
+    computer: 0,
+}
+
 function getComputerChoice() {
     const choices = ["Rock", "Paper", "Scissors"];
     const randomChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -20,11 +28,11 @@ function playRound(playerSelection, computerSelection) {
     ];
 
     if (normalizedPlayerSelection === normalizedComputerSelection) 
-        return `Try Again! You both chose ${normalizedComputerSelection}`
+        outcomeDiv.textContent = `Try Again! You both chose ${normalizedComputerSelection}`
     
 
     if (!['rock', 'paper', 'scissors'].includes(normalizedPlayerSelection)) 
-        return `Try Again! ${playerSelection} is not one of the options!`
+        outcomeDiv.textContent = `Try Again! ${playerSelection} is not one of the options!`
 
     let wonRound = false;
     for (const winningScenario of winningScenarios) {
@@ -34,39 +42,27 @@ function playRound(playerSelection, computerSelection) {
         }
     }
 
-    if (wonRound)
-        return (`You Win! ${playerSelection} beats ${computerSelection}`);
-    else 
-        return (`You Lose! ${computerSelection} beats ${playerSelection}`);
-
+    if (wonRound) {
+        game.player++;
+        outcomeDiv.textContent = `You Win! ${playerSelection} beats ${computerSelection}`;
+        scoreDiv.textContent = `You: ${game.player} --- Computer: ${game.computer}`
+        if (game.player === 5) resetGame();
+    } else {
+        game.computer++;
+        outcomeDiv.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        scoreDiv.textContent = `You: ${game.player} --- Computer: ${game.computer}`
+        if (game.computer === 5) resetGame();
+    }
 }
 
-function game() {
-    const score = {
-        player: 0,
-        computer: 0,
+function resetGame() {
+    if (game.player === 5) {
+        outcomeDiv.textContent = 'Congratulations, you are the rock, paper, scissors champion!';
+    } else if (game.computer === 5) {
+        outcomeDiv.textContent = 'Sorry, you do not have what it takes to be the rock, paper, scissors, champion...';
     }
-    let roundCount = 0;
-    let keepGoing = true;
-    while (keepGoing) {
-        const playerSelection = prompt("Please enter rock, paper, or scissors")
-        const result = playRound(playerSelection, getComputerChoice());
-        console.log(result);
-        if (result.includes('Win'))
-            score.player++;
-        else if (result.includes('Lose'))
-            score.computer++;
-        if (!result.includes('Try Again')) {
-            roundCount++;
-        }
-        if (roundCount === 5) keepGoing = false;
-    }
-    if (score.player > score.computer) {
-        console.log("Congratulations! You are the Rock, Paper, Scissors Champion!")
-    } else {
-        console.log("Sorry! You are not the Rock, Paper, Scissors Champion.")
-    }
-    console.log(`Final score (You - CPU): ${score.player} - ${score.computer}`)
+    game.player = 0;
+    game.computer = 0;
 }
 
 document.querySelector("#rockBtn").addEventListener("click", () => {
@@ -80,3 +76,7 @@ document.querySelector("#paperBtn").addEventListener("click", () => {
 document.querySelector("#scissorsBtn").addEventListener("click", () => {
     playRound('scissors', getComputerChoice())
 });
+
+
+
+

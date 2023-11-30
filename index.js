@@ -69,4 +69,14 @@ function game() {
     console.log(`Final score (You - CPU): ${score.player} - ${score.computer}`)
 }
 
-game();
+document.querySelector("#rockBtn").addEventListener("click", () => {
+    playRound('rock', getComputerChoice())
+});
+
+document.querySelector("#paperBtn").addEventListener("click", () => {
+    playRound('paper', getComputerChoice())
+});
+
+document.querySelector("#scissorsBtn").addEventListener("click", () => {
+    playRound('scissors', getComputerChoice())
+});
